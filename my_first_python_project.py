@@ -3,30 +3,21 @@ from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import messagebox
 import re
-
-# ----------------- Globals -----------------
 qr_window = None
 qr_label = None
-
-# ----------------- Generate QR -----------------
 def generate_qr():
     name = name_entry.get().strip()
     phone = phone_entry.get().strip()
     email = email_entry.get().strip()
-
-    # ---------- Validation ----------
     if not re.fullmatch(r"[A-Za-z ]+", name):
         messagebox.showerror("Invalid Name", "Name should contain only letters")
         return
-
     if not re.fullmatch(r"\d{10}", phone):
         messagebox.showerror("Invalid Phone", "Phone number must be 10 digits")
         return
-
     if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", email):
         messagebox.showerror("Invalid Email", "Enter a valid email address")
         return
-
     data = f"""
 Name: {name}
 Phone: {phone}
@@ -37,9 +28,6 @@ Email: {email}
     qr.save("my_qr_code.png")
 
     show_qr_window("my_qr_code.png")
-
-
-# ----------------- QR Window -----------------
 def show_qr_window(image_path):
     global qr_window, qr_label
 
@@ -65,24 +53,17 @@ def show_qr_window(image_path):
 
     qr_label.config(image=img_tk)
     qr_label.image = img_tk   # IMPORTANT
-
-
-# ----------------- Main Window -----------------
 root = tk.Tk()
 root.title("QR Code Generator")
 root.geometry("420x480")
 root.configure(bg="#E8ECF1")
 root.resizable(False, False)
-
-# ----------------- Canvas + Scrollbar -----------------
 canvas = tk.Canvas(root, bg="#E8ECF1", highlightthickness=0)
 scrollbar = tk.Scrollbar(root, orient="vertical", command=canvas.yview)
 canvas.configure(yscrollcommand=scrollbar.set)
 
 scrollbar.pack(side="right", fill="y")
 canvas.pack(side="left", fill="both", expand=True)
-
-# ----------------- Scroll Frame -----------------
 scroll_frame = tk.Frame(canvas, bg="#E8ECF1")
 canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
 
@@ -90,12 +71,8 @@ def update_scroll(event):
     canvas.configure(scrollregion=canvas.bbox("all"))
 
 scroll_frame.bind("<Configure>", update_scroll)
-
-# ----------------- Card -----------------
 card = tk.Frame(scroll_frame, bg="white")
 card.pack(pady=20, padx=20, fill="both")
-
-# ----------------- Title -----------------
 tk.Label(
     card,
     text="QR Code Generator",
@@ -103,8 +80,6 @@ tk.Label(
     bg="white",
     fg="#333"
 ).pack(pady=15)
-
-# ----------------- Input Fields -----------------
 def create_field(label_text):
     tk.Label(
         card,
@@ -126,8 +101,6 @@ def create_field(label_text):
 name_entry = create_field("Name")
 phone_entry = create_field("Phone Number")
 email_entry = create_field("Email")
-
-# ----------------- Button -----------------
 tk.Button(
     card,
     text="Generate QR",
@@ -143,3 +116,4 @@ tk.Button(
 
 # ----------------- Run App -----------------
 root.mainloop()
+
